@@ -62,7 +62,6 @@
       padding: 8px 12px;
       border-radius: 15px;
       max-width: 80%;
-      word-wrap: break-word;
     }
     .user { background: #d1e7ff; margin-left: auto; text-align: right; }
     .bot { background: #f1f1f1; margin-right: auto; text-align: left; }
@@ -106,12 +105,6 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
-    /* small responsiveness */
-    @media (max-width: 420px) {
-      #chatWidget { right: 10px; width: 90%; }
-      #chatToggle { right: 10px; bottom: 14px; }
-    }
   </style>
 </head>
 <body>
@@ -120,7 +113,7 @@
 <button id="chatToggle">💬</button>
 
 <!-- Widget chat -->
-<div id="chatWidget" role="region" aria-label="Chat Fun Face Donuts" aria-hidden="true">
+<div id="chatWidget">
   <div id="chatHeader">Fun Face Donuts</div>
   <div id="chatbox"></div>
 
@@ -132,13 +125,12 @@
   </div>
 
   <div id="inputArea">
-    <input id="input" placeholder="Tulis pesan..." aria-label="Tulis pesan" />
+    <input id="input" placeholder="Tulis pesan..." />
     <button id="send">Kirim</button>
   </div>
 </div>
 
 <script>
-  // GANTI BERIKUT DENGAN URL WEBHOOK N8N MILIKMU (sudah diganti sesuai permintaan)
   const WEBHOOK_URL = "https://YOUR-N8N-ID.n8n.cloud/webhook/funface-chatbot";
 
   const toggleBtn = document.getElementById("chatToggle");
@@ -168,10 +160,8 @@
   toggleBtn.addEventListener("click", () => {
     if (widget.style.display === "flex") {
       widget.style.display = "none";
-      widget.setAttribute('aria-hidden','true');
     } else {
       widget.style.display = "flex";
-      widget.setAttribute('aria-hidden','false');
       showGreeting();
     }
   });
@@ -187,15 +177,10 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg })
       });
-
-      // kita baca teks (sesuai respondToWebhook default)
       let reply = await res.text();
-      // jika kosong, fallback pesan error
-      if (!reply) reply = "Maaf, belum ada respons dari server.";
       addMessage(reply, "bot");
     } catch (err) {
-      addMessage("⚠️ Error menghubungi server. Coba lagi nanti.", "bot");
-      console.error("Chat widget error:", err);
+      addMessage("⚠️ Error menghubungi server.", "bot");
     }
   }
 
