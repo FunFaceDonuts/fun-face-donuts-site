@@ -5,134 +5,50 @@
   <title>Chatbot Fun Face Donuts</title>
   <style>
     body { font-family: Arial, sans-serif; }
-
-    /* Tombol bulat melayang */
     #chatToggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #ff9800;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      z-index: 9999;
+      position: fixed; bottom: 20px; right: 20px;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #ff9800; color: white; border: none;
+      cursor: pointer; font-size: 28px; display: flex;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 9999;
     }
-
-    /* Kotak chat */
     #chatWidget {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      width: 320px;
-      height: 470px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      background: #fff;
-      display: none;
-      flex-direction: column;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      z-index: 9998;
+      position: fixed; bottom: 90px; right: 20px;
+      width: 320px; height: 470px; border-radius: 10px;
+      border: 1px solid #ccc; background: #fff; display: none;
+      flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9998;
     }
-
-    #chatHeader {
-      background: #ff9800;
-      color: white;
-      padding: 12px;
-      font-weight: bold;
-      border-radius: 10px 10px 0 0;
-    }
-
-    #chatbox {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-      background: #fafafa;
-    }
-
-    .msg {
-      margin: 5px 0;
-      padding: 8px 12px;
-      border-radius: 15px;
-      max-width: 80%;
-    }
+    #chatHeader { background: #ff9800; color: white; padding: 12px; font-weight: bold; border-radius: 10px 10px 0 0; }
+    #chatbox { flex: 1; padding: 10px; overflow-y: auto; background: #fafafa; }
+    .msg { margin: 5px 0; padding: 8px 12px; border-radius: 15px; max-width: 80%; word-wrap: break-word; }
     .user { background: #d1e7ff; margin-left: auto; text-align: right; }
     .bot { background: #f1f1f1; margin-right: auto; text-align: left; }
-
-    /* Quick reply */
-    #quickReplies {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      padding: 6px;
-      border-top: 1px solid #eee;
-      background: #fafafa;
-    }
-    .quick-btn {
-      background: #eee;
-      border: 1px solid #ccc;
-      border-radius: 15px;
-      padding: 5px 10px;
-      cursor: pointer;
-      font-size: 13px;
-    }
+    #quickReplies { display: flex; justify-content: center; gap: 5px; padding: 6px; border-top: 1px solid #eee; background: #fafafa; }
+    .quick-btn { background: #eee; border: 1px solid #ccc; border-radius: 15px; padding: 5px 10px; cursor: pointer; font-size: 13px; }
     .quick-btn:hover { background: #ff9800; color: #fff; }
-
-    #inputArea {
-      display: flex;
-      padding: 8px;
-      border-top: 1px solid #ddd;
-    }
-    #input {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    #send {
-      padding: 8px 12px;
-      margin-left: 5px;
-      background: #ff9800;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+    #inputArea { display: flex; padding: 8px; border-top: 1px solid #ddd; }
+    #input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+    #send { padding: 8px 12px; margin-left: 5px; background: #ff9800; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
   </style>
 </head>
 <body>
-
-<!-- Tombol toggle -->
 <button id="chatToggle">💬</button>
-
-<!-- Widget chat -->
 <div id="chatWidget">
   <div id="chatHeader">Fun Face Donuts</div>
   <div id="chatbox"></div>
-
-  <!-- Quick reply -->
   <div id="quickReplies">
     <button class="quick-btn">Harga</button>
     <button class="quick-btn">Lokasi</button>
     <button class="quick-btn">Jam Buka</button>
   </div>
-
   <div id="inputArea">
     <input id="input" placeholder="Tulis pesan..." />
     <button id="send">Kirim</button>
   </div>
 </div>
-
 <script>
   const WEBHOOK_URL = "https://YOUR-N8N-ID.n8n.cloud/webhook/funface-chatbot";
-
   const toggleBtn = document.getElementById("chatToggle");
   const widget = document.getElementById("chatWidget");
   const chatbox = document.getElementById("chatbox");
@@ -140,7 +56,7 @@
   const sendBtn = document.getElementById("send");
   const quickBtns = document.querySelectorAll(".quick-btn");
 
-  let greeted = false;
+  let greeted = localStorage.getItem("chatbot_greeted");
 
   function addMessage(text, sender) {
     const div = document.createElement("div");
@@ -153,48 +69,35 @@
   function showGreeting() {
     if (!greeted) {
       addMessage("Halo 👋, selamat datang di Fun Face Donuts! Silakan pilih tombol cepat atau ketik pertanyaanmu.", "bot");
-      greeted = true;
+      localStorage.setItem("chatbot_greeted", "true");
     }
   }
 
   toggleBtn.addEventListener("click", () => {
-    if (widget.style.display === "flex") {
-      widget.style.display = "none";
-    } else {
-      widget.style.display = "flex";
-      showGreeting();
-    }
+    widget.style.display = widget.style.display === "flex" ? "none" : "flex";
+    if (widget.style.display === "flex") showGreeting();
   });
 
   async function sendMessage(msg) {
     if (!msg) return;
     addMessage(msg, "user");
     input.value = "";
-
     try {
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg })
       });
-      let reply = await res.text();
-      addMessage(reply, "bot");
+      const data = await res.json();
+      addMessage(data.reply, "bot");
     } catch (err) {
       addMessage("⚠️ Error menghubungi server.", "bot");
     }
   }
 
   sendBtn.addEventListener("click", () => sendMessage(input.value.trim()));
-  input.addEventListener("keypress", e => {
-    if (e.key === "Enter") sendMessage(input.value.trim());
-  });
-
-  quickBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      sendMessage(btn.textContent);
-    });
-  });
+  input.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(input.value.trim()); });
+  quickBtns.forEach(btn => btn.addEventListener("click", () => sendMessage(btn.textContent)));
 </script>
-
 </body>
 </html>
